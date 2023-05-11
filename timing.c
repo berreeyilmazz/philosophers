@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 11:43:09 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/07 17:31:53 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/05/11 04:56:29 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,16 @@ int	ft_wait(long long milisec, t_table *table)
 	int	i;
 
 	i = 0;
-
 	while (ft_get_time() < milisec)
 	{
-		if (ft_check_repeat(table) == 0)
+		pthread_mutex_lock(table->is_she_dead);
+		if (table->dead == 1)
 		{
+			pthread_mutex_unlock(table->is_she_dead);
 			return (0);
 		}
-		usleep(200);
+		pthread_mutex_unlock(table->is_she_dead);
+		usleep(500);
 	}
 	return (1);
 }
@@ -40,39 +42,48 @@ int	ft_wait(long long milisec, t_table *table)
 int	ft_check_repeat(t_table *table)
 {
 	int	x;
+	int y;
 
 	x = 0;
-	while (x < table->nmb_of_phork)
+	y = -1;
+	pthread_mutex_lock(table->count_mutex);
+	while (++y < table->nmb_of_phork)
 	{
-		pthread_mutex_lock(&table->count_mutex);
-		if (table->philos[x].eat_count == table->time_to_re)
-			x++;
-		if (x == table->nmb_of_phork)
+		if (table->philos[y].eat_count != table->time_to_re)
 		{
-			table->enough = 1;
-			pthread_mutex_unlock(&table->count_mutex);
-			return (0);
+			pthread_mutex_unlock(table->count_mutex);
+			return (-1);
 		}
-		pthread_mutex_unlock(&table->count_mutex);
+		usleep(100);
 	}
-	return(1);
+	table->enough = 1;
+	pthread_mutex_unlock(table->count_mutex);
+	return (1);
 }
 
-int	ft_check_if_dead(t_table *table, t_philo *philo)
+int	ft_check_if_dead(t_table *table)
 {
-	pthread_mutex_lock(table->last_meal_mutex);
-	if (table->time_to_die <= (ft_get_time() - table->start_time
-			- philo->last_eat))
+	int	i;
+
+	i = -1;
+	if (table->time_to_die < table->time_to_eat + table->time_to_sleep)
+		return(0);
+	while (++i < table->nmb_of_phork)
 	{
+		pthread_mutex_lock(table->last_meal_mutex);
+		if (table->time_to_die < (ft_get_time() - table->start_time - table->philos[i].last_eat))
+		{
+			pthread_mutex_unlock(table->last_meal_mutex);
+			pthread_mutex_lock(table->is_she_dead);
+			table->dead = 1;
+			pthread_mutex_unlock(table->is_she_dead);
+			pthread_mutex_lock(table->print_mutex);
+			printf("%lld %d is died\n", (ft_get_time() - table->start_time), table->philos[i].id_num);
+			pthread_mutex_unlock(table->print_mutex);
+			return (0);
+		}
 		pthread_mutex_unlock(table->last_meal_mutex);
-		printf("%lld %d is died\n", (ft_get_time() - table->start_time), philo->id_num);
-		pthread_mutex_lock(table->is_she_dead);
-		table->dead = 1;
-		pthread_mutex_unlock(table->is_she_dead);
-		return (0);
 	}
-	pthread_mutex_unlock(table->last_meal_mutex);
-	//printf("++\n");
 	return (1);
 }
 
@@ -81,23 +92,16 @@ int	ft_control_if_re(t_table *table)
 	int	i;
 
 	i = 0;
-	ft_check_repeat(table);
-	printf("cikti\n");
-
 	while (i < table->nmb_of_phork)
 	{
-	//	printf("    enough %d    \n", table->enough);
-		pthread_mutex_lock(&(table->count_mutex));
-		if (ft_check_if_dead(table, &(table->philos[i])) == 0 || table->enough == 1)
-		{
-			pthread_mutex_unlock(&(table->count_mutex));
-			break ;
-		}
-		pthread_mutex_unlock(&(table->count_mutex));
+		if (!ft_check_if_dead(table))
+			return (0);
+		else if(ft_check_repeat(table) != -1)
+			return (0);
 		i++;
 		if (i == table->nmb_of_phork)
 			i = 0;
-		usleep(200);
+		usleep(500);
 	}
-	return (0);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 12:11:35 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/07 15:30:55 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:12:51 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,7 @@ int	ft_check_if_neg(t_table *table)
 	i = -1;
 	while (++i < table->nmb_of_phork)
 	{
-		pthread_mutex_lock(&(table->count_mutex));
 		table->philos[i].eat_count = 0;
-		pthread_mutex_unlock(&(table->count_mutex));
 	}
 	if (table->nmb_of_phork <= 0 || table->time_to_die <= 0
 		|| table->time_to_eat <= 0 || table->time_to_sleep <= 0)

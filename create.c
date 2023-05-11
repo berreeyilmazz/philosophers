@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 12:35:42 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/07 17:28:27 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/05/11 04:39:28 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ int	ft_create_table(t_table *table)
 	table->print_mutex = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(table->print_mutex, NULL);
 	table->dead = 0;
-	pthread_mutex_init(&table->count_mutex, NULL);
-	table->enough = 0;
+	table->count_mutex = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(table->count_mutex, NULL);
+	table->enough = -1;
 	return (0);
 }
 
@@ -62,13 +63,12 @@ int	ft_create_thread(t_table *table)
 		usleep(100);
 	}
 	ft_control_if_re(table);
-	//printf("+++\n");
-
 	i = 0;
 	while (i < table->nmb_of_phork)
 	{
 		if (pthread_join(table->philos[i].thread_id, NULL))
 			return (0);
+		printf("            %d\n", i);
 		i++;
 	}
 	return (1);
