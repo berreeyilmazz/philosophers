@@ -1,4 +1,4 @@
-SRCS	= create.c main.c timing.c utils.c
+SRCS	= create.c ft_av.c main.c timing.c action.c repeat_dead.c
 OBJ		= $(SRCS:.c=.o)
 NAME	= philo
 CC		= gcc
