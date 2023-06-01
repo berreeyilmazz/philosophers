@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 15:32:09 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/21 01:49:10 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:23:35 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		ft_thinking(t_table *table, t_philo *philo);
 void	*ft_routine(void *arg);
 int		ft_create_thread(t_table *table);
 int		ft_get_time();
-void	ft_wait(long long milisec);
+int		ft_wait(long long milisec, t_table *table, t_philo *philo);
 int		ft_imdead(t_table *table, t_philo *philo);
 
 

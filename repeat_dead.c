@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 22:37:38 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/21 01:36:48 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:40:40 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 int	ft_imdead(t_table *table, t_philo *philo)
 {
 	pthread_mutex_lock(&(table->last_meal));
-	if (ft_get_time() - table->start - philo->last_eat >= table->time_to_die)
+//	printf(" %lld  %d\n", ft_get_time() - philo->last_eat, table->time_to_die);
+	if (ft_get_time() - philo->last_eat >= table->time_to_die)
 	{
+		pthread_mutex_lock(&(table->is_she_dead));
 		*(philo->im_dead) = 1;
+		pthread_mutex_unlock(&(table->is_she_dead));
 		pthread_mutex_unlock(&(table->last_meal));
 		return (0);
 	}
@@ -27,7 +30,6 @@ int	ft_imdead(t_table *table, t_philo *philo)
 
 int	ft_dead(t_table *table, t_philo *philo)
 {
-	printf("     %d\n", table->dead[1]);
 	int	i;
 
 	i = 0;
@@ -51,6 +53,8 @@ int	ft_repeat(t_table *table)
 	int	i;
 
 	i = 0;
+	if(table->argc == 5)
+		return(1);
 	while (i < table->nmb_of_phork)
 	{
 		pthread_mutex_lock(&(table->last_meal));
@@ -59,8 +63,8 @@ int	ft_repeat(t_table *table)
 			pthread_mutex_unlock(&(table->last_meal));
 			return (1);
 		}
-		i++;
 		pthread_mutex_unlock(&(table->last_meal));
+		i++;
 	}
 	return (0);
 }

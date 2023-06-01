@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:55:15 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/21 01:37:31 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:35:50 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_create_philos_and_table(t_table *table)
 		table->dead[i] = 0;
 		table->philos[i].im_dead = &(table->dead[i]);
 		table->philos[i].eaten = &(table->eat[i]);
-		table->philos[i].last_eat = 0;
+		table->philos[i].last_eat = table->start;
 	}
 	pthread_mutex_init(&table->is_she_dead, NULL);
 	pthread_mutex_init(&table->last_meal, NULL);
@@ -76,6 +76,8 @@ void	*ft_routine(void *arg)
 			break;
 		if(!ft_sleeping(table, philo))
 			break;
+		if(!ft_wait(table->time_to_sleep + ft_get_time(), table, philo))
+			break;
 		if(!ft_thinking(table, philo))
 			break;
 	}
@@ -99,8 +101,6 @@ int	ft_create_thread(t_table *table)
 	i = 0;
 	while (i < table->nmb_of_phork)
 	{
-	printf("ttt\n");
-	printf("A\n");
 		if (pthread_join(table->philos[i].thread_id, NULL))
 			return (0);
 		i++;

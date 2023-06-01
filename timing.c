@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 20:33:07 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/21 01:48:36 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/01 21:40:11 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,19 @@ int	ft_get_time()
 	return((mikro.tv_sec * 1000) + mikro.tv_usec / 1000);
 }
 
-void	ft_wait(long long milisec)
+int	ft_wait(long long milisec, t_table *table, t_philo *philo)
 {
 	int	i;
-
+	(void)table;
 	i = 0;
 	while (ft_get_time() < milisec)
 	{
-		usleep(500);
-		i++;
+		if (!ft_imdead(table, philo) && !ft_dead(table, philo))
+		{
+			printf("000\n");
+			return (0);
+		}
+		usleep(50);
 	}
+	return (1);
 }
