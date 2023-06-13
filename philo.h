@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/20 15:32:09 by havyilma          #+#    #+#             */
-/*   Updated: 2023/06/01 21:23:35 by havyilma         ###   ########.fr       */
+/*   Created: 2023/06/13 09:14:46 by havyilma          #+#    #+#             */
+/*   Updated: 2023/06/13 10:36:17 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ typedef struct s_philo
 	int				id_num;
 	struct s_table	*table;
 	long long		last_eat;
-	int				*im_dead;
-	int				*eaten;
+	int				eaten;
 
 }					t_philo;
 
@@ -45,34 +44,26 @@ typedef struct s_table
 	pthread_mutex_t	last_meal;
 	pthread_mutex_t	print;
 	pthread_mutex_t	count;
-	int				*dead;
-	int				*eat;
+	pthread_mutex_t	ctrl;
+	pthread_mutex_t	dst;
+	int				dead;
 	long long		start;
 	int				argc;
 
 }					t_table;
 
-int		ft_check_av(int ac, char **av);
-int		ft_strlen(char *ac);
-int		ft_atoi(char *ac);
-int		ft_take_av(t_table *table, char **av, int ac);
+int	ft_strlen(char *ac);
+int	ft_atoi(char *ac);
+int	ft_take_argv(t_table *table, char **av, int ac);
+int	ft_check_argv(int ac, char **av);
+int	ft_check(t_table *table);
 void	ft_create_philos_and_table(t_table *table);
-int		ft_dead(t_table *table, t_philo *philo);
-int		ft_repeat(t_table *table);
-void	ft_print(t_table *table, t_philo *philo, int p);
-int		ft_rfork(t_table *table, t_philo *philo);
-int		ft_lfork(t_table *table, t_philo *philo);
-int		ft_eating (t_table *table, t_philo *philo);
-int		ft_sleeping(t_table *table, t_philo *philo);
-int		ft_thinking(t_table *table, t_philo *philo);
+int	ft_create_thread(t_table *table);
+void ft_print(t_table *table, t_philo *philo, int p);
+long long	ft_get_time();
+int	ft_wait(long long milisec, t_table *table, t_philo *philo);
 void	*ft_routine(void *arg);
-int		ft_create_thread(t_table *table);
-int		ft_get_time();
-int		ft_wait(long long milisec, t_table *table, t_philo *philo);
-int		ft_imdead(t_table *table, t_philo *philo);
-
-
-
-
+int	ft_eating(t_table *table, t_philo *philo);
+void ft_print(t_table *table, t_philo *philo, int p);
 
 #endif

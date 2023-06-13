@@ -1,18 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_av.c                                            :+:      :+:    :+:   */
+/*   av.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/20 15:40:57 by havyilma          #+#    #+#             */
-/*   Updated: 2023/05/20 22:22:58 by havyilma         ###   ########.fr       */
+/*   Created: 2023/06/13 09:16:20 by havyilma          #+#    #+#             */
+/*   Updated: 2023/06/13 10:25:20 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_check_av(int ac, char **av)
+int	ft_take_argv(t_table *table, char **av, int ac)
+{
+	if (!(ft_check_argv(ac, av)))
+		return (0);
+	table->argc = ac;
+	table->nmb_of_phork = ft_atoi(av[1]);
+	if (table->nmb_of_phork == 1)
+		return (0);
+	table->time_to_die = ft_atoi(av[2]);
+	table->time_to_eat = ft_atoi(av[3]);
+	table->time_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		table->time_to_re = ft_atoi(av[5]);
+	else if (ac == 5)
+		table->time_to_re = -1;
+	return (1);
+}
+
+int	ft_check_argv(int ac, char **av)
 {
 	int	i;
 	int	j;
@@ -53,27 +71,10 @@ int	ft_atoi(char *ac)
 {
 	int	i;
 	int	rtrn;
-	int	sign;
 
 	rtrn = 0;
 	i = -1;
-	sign = 1;
 	while (++i < ft_strlen(ac))
 		rtrn = rtrn * 10 + (ac[i] - 48);
 	return (rtrn);
-}
-
-int	ft_take_av(t_table *table, char **av, int ac)
-{
-	table->nmb_of_phork = ft_atoi(av[1]);
-	if (table->nmb_of_phork == 1)
-		return (0);
-	table->time_to_die = ft_atoi(av[2]);
-	table->time_to_eat = ft_atoi(av[3]);
-	table->time_to_sleep = ft_atoi(av[4]);
-	if (ac == 6)
-		table->time_to_re = ft_atoi(av[5]);
-	else if (ac == 5)
-		table->time_to_re = -1;
-	return (1);
 }

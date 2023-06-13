@@ -1,38 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   timing.c                                           :+:      :+:    :+:   */
+/*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/13 09:49:13 by havyilma          #+#    #+#             */
-/*   Updated: 2023/06/13 11:31:54 by havyilma         ###   ########.fr       */
+/*   Created: 2023/06/13 10:00:28 by havyilma          #+#    #+#             */
+/*   Updated: 2023/06/13 11:17:01 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	ft_get_time()
+int	ft_check(t_table *table)
 {
-	struct timeval mikro;
+	int	i;
 
-	gettimeofday(&mikro, NULL);
-	return((mikro.tv_sec * 1000) + mikro.tv_usec / 1000);
-}
-
-int	ft_wait(long long milisec, t_table *table, t_philo *philo)
-{
-	(void)philo;
-	while (ft_get_time() < milisec)
+	i = 0;
+	while(i < table->nmb_of_phork)
 	{
-		pthread_mutex_lock(&table->is_she_dead);
-		if (table->dead >= 1)
+		pthread_mutex_lock(&table->last_meal);
+		if(ft_get_time() - table->philos[i].last_eat >= table->time_to_die)
 		{
+			pthread_mutex_lock(&table->is_she_dead);
+			table->dead += 1;
+			pthread_mutex_unlock(&table->last_meal);
 			pthread_mutex_unlock(&table->is_she_dead);
 			return (0);
 		}
+		pthread_mutex_unlock(&table->last_meal);
+		if (table->dead >= 1)
+		{
+			pthread_mutex_unlock(&table->is_she_dead);
+			ft_print(table, &table->philos[i], 'd');
+			return (0);
+		}
 		pthread_mutex_unlock(&table->is_she_dead);
-		usleep(30);
+		i++;
+		if (i == table->nmb_of_phork)
+			i = 0;
 	}
 	return (1);
 }
