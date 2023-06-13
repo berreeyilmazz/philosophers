@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 09:14:46 by havyilma          #+#    #+#             */
-/*   Updated: 2023/06/13 10:36:17 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/13 19:21:12 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,29 @@ typedef struct s_table
 	pthread_mutex_t	print;
 	pthread_mutex_t	count;
 	pthread_mutex_t	ctrl;
-	pthread_mutex_t	dst;
 	int				dead;
 	long long		start;
 	int				argc;
+	int				re;
 
 }					t_table;
 
-int	ft_strlen(char *ac);
-int	ft_atoi(char *ac);
-int	ft_take_argv(t_table *table, char **av, int ac);
-int	ft_check_argv(int ac, char **av);
-int	ft_check(t_table *table);
-void	ft_create_philos_and_table(t_table *table);
-int	ft_create_thread(t_table *table);
-void ft_print(t_table *table, t_philo *philo, int p);
-long long	ft_get_time();
-int	ft_wait(long long milisec, t_table *table, t_philo *philo);
-void	*ft_routine(void *arg);
-int	ft_eating(t_table *table, t_philo *philo);
-void ft_print(t_table *table, t_philo *philo, int p);
+int					ft_strlen(char *ac);
+int					ft_atoi(char *ac);
+int					ft_take_argv(t_table *table, char **av, int ac);
+int					ft_check_argv(int ac, char **av);
+int					ft_check(t_table *table);
+void				ft_create_philos_and_table(t_table *table);
+int					ft_create_thread(t_table *table);
+void				ft_print(t_table *table, t_philo *philo, int p);
+long long			ft_get_time(void);
+int					ft_wait(long long milisec);
+void				*ft_routine(void *arg);
+int					ft_eating(t_table *table, t_philo *philo);
+void				ft_print(t_table *table, t_philo *philo, int p);
+int					ft_1(t_table *table);
+int					ft_2(t_table *table);
+int					ft_3(t_table *table);
+int					ft_zero(t_table *table, t_philo *philo);
 
 #endif

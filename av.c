@@ -6,7 +6,7 @@
 /*   By: havyilma <havyilma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 09:16:20 by havyilma          #+#    #+#             */
-/*   Updated: 2023/06/13 10:25:20 by havyilma         ###   ########.fr       */
+/*   Updated: 2023/06/13 19:17:44 by havyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int	ft_take_argv(t_table *table, char **av, int ac)
 		return (0);
 	table->argc = ac;
 	table->nmb_of_phork = ft_atoi(av[1]);
-	if (table->nmb_of_phork == 1)
-		return (0);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
