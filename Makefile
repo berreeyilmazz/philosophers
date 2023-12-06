@@ -1,7 +1,7 @@
 SRCS	=  av.c check.c create.c main.c routine.c timing.c
 OBJ		= $(SRCS:.c=.o)
 NAME	= philo
-CC		= gcc
+CC		= gcc 
 CFLAGS	= -Wall -Wextra -Werror
 
 all 	: $(NAME)
